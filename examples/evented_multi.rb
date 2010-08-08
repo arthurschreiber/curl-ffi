@@ -167,9 +167,9 @@ EventMachine::run {
     "http://www.newslink.org",
     "http://www.un.org" ].each do |url|
     e = Curl::Easy.new
-    e.setopt(Curl::OPTION[:PROXY], "")
-    e.setopt(Curl::OPTION[:URL], url)
-    e.setopt(Curl::OPTION[:CONNECTTIMEOUT], 4)
+    e.setopt(:PROXY, "")
+    e.setopt(:URL, url)
+    e.setopt(:CONNECTTIMEOUT, 4)
     $multi.add_handle(e)
   end
 }
