@@ -79,16 +79,8 @@ end
 def setsock(socket, easy, action)
   $sockets[socket][:action] = action
   conn = $sockets[socket][:connection]
-  conn.notify_readable = false
-  conn.notify_readable = false
-
-  if action & 1
-    conn.notify_readable = true
-  end
-
-  if action & 2
-    conn.notify_writable = true
-  end
+  conn.notify_readable = action & 1 != 0
+  conn.notify_writable = action & 2 != 0
 end
 
 def remsock(socket)
