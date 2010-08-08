@@ -2,10 +2,9 @@
 # Inspired by the different hiperfifo examples on the libcurl site.
 require "rubygems"
 require "benchmark"
-require "lib/curl"
 require "eventmachine"
 
-require "ruby-debug"
+require File.expand_path("../lib/curl", File.dirname(__FILE__))
 
 if FFI::Platform.windows?
   # Sockets returned by curl are WinSock SOCKETs
@@ -169,7 +168,6 @@ EventMachine::run {
     "http://www.un.org" ].each do |url|
     e = Curl::Easy.new
     e.setopt(Curl::OPTION[:PROXY], "")
-    e.setopt(Curl::OPTION[:VERBOSE], 1)
     e.setopt(Curl::OPTION[:URL], url)
     $multi.add_handle(e)
   end
