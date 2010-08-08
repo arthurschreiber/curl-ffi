@@ -7,17 +7,20 @@ module Curl
     def initialize
       @pointer = FFI::AutoPointer.new(Curl.multi_init, Curl.method(:multi_cleanup))
       @running = -1
+      @handles = []
       @messages_in_queue = 0
     end
 
     # @todo handle return code
     def add_handle(easy)
       Curl.multi_add_handle(@pointer, easy.pointer)
+      @handles << easy # Save the handle so it won't be gc'ed
     end
 
     # @todo handle return code
     def remove_handle(easy)
       Curl.multi_remove_handle(@pointer, easy.pointer)
+      @handles.delete(easy) # Save the handle so it won't be gc'ed
     end
 
     def setopt(option, param)
