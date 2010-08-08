@@ -6,9 +6,13 @@ module Curl
 
   if FFI::Platform.windows?
     typedef :uint, :curl_socket_t
+    SOCKET_BAD = 4294967295
   else
     typedef :int, :curl_socket_t
+    SOCKET_BAD = -1
   end
+
+  SOCKET_TIMEOUT = SOCKET_BAD
 
   # @todo This might have to be changed for different systems
   typedef :long_long, :curl_off_t
@@ -176,10 +180,11 @@ module Curl
   OPTION_OFF_T         = 30000
 
   OPTION = enum :option, [
-    :FILE,  1 + OPTION_OBJECTPOINT,
-    :URL,   2 + OPTION_OBJECTPOINT,
-    :PORT,  3 + OPTION_LONG,
-    :PROXY, 4 + OPTION_OBJECTPOINT
+    :FILE,    1   + OPTION_OBJECTPOINT,
+    :URL,     2   + OPTION_OBJECTPOINT,
+    :PORT,    3   + OPTION_LONG,
+    :PROXY,   4   + OPTION_OBJECTPOINT,
+    :VERBOSE, 41  + OPTION_LONG
   ]
 
   MULTI_OPTION = enum :multi_option, [
