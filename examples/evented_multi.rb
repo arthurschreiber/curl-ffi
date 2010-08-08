@@ -147,6 +147,19 @@ multi_timer_callback = FFI::Function.new(:int, [:pointer, :long]) do |multi_ptr,
   0
 end
 
+def progress_callback(url_pointer, dltotal, dlnow, ultotal, ulnow)
+  puts "[#{Time.now}]Progress: %s (%g/%g)\n" % [url_pointer.read_string, dlnow, dltotal]
+  return 0
+end
+
+def write_callback(easy, size, nmemb, data)
+  realsize = size * nmemb
+  return realsize
+end
+
+PROGRESS_CALLBACK = FFI::Function.new(:int, [:pointer, :double, :double, :double, :double], &self.method(:progress_callback))
+WRITE_CALLBACK = FFI::Function.new(:size_t, [:pointer, :size_t, :size_t, :pointer], &self.method(:write_callback))
+
 EventMachine::run {
   $multi.setopt(:SOCKETFUNCTION, sock_callback)
   $multi.setopt(:TIMERFUNCTION, multi_timer_callback)
@@ -157,11 +170,14 @@ EventMachine::run {
     "http://www.bloglines.com",
     "http://www.techweb.com",
     "http://www.newslink.org",
-    "http://www.un.org" ].each do |url|
+    ].each do |url|
     e = Curl::Easy.new
     e.setopt(:PROXY, "")
     e.setopt(:URL, url)
-    e.setopt(:CONNECTTIMEOUT, 4)
+    e.setopt(:NOPROGRESS, 0)
+    e.setopt(:PROGRESSFUNCTION, PROGRESS_CALLBACK)
+    e.setopt(:WRITEFUNCTION, WRITE_CALLBACK)
+    e.setopt(:PROGRESSDATA, url)
     $multi.add_handle(e)
   end
 }
