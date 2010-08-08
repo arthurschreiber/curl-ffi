@@ -169,6 +169,7 @@ EventMachine::run {
     e = Curl::Easy.new
     e.setopt(Curl::OPTION[:PROXY], "")
     e.setopt(Curl::OPTION[:URL], url)
+    e.setopt(Curl::OPTION[:CONNECTTIMEOUT], 4)
     $multi.add_handle(e)
   end
 }
