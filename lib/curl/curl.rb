@@ -914,6 +914,24 @@ module Curl
   attach_function :easy_setopt_pointer, :curl_easy_setopt, [:pointer, :option, :pointer], :code
   attach_function :easy_setopt_curl_off_t, :curl_easy_setopt, [:pointer, :option, :curl_off_t], :code
 
+  def self.easy_setopt(handle, option, value)
+    option = OPTION[option] if option.is_a?(Symbol)
+
+    if option >= OPTION_OFF_T
+      self.easy_setopt_curl_off_t(handle, option, value)
+    elsif option >= OPTION_FUNCTIONPOINT
+      self.easy_setopt_pointer(handle, option, value)
+    elsif option >= OPTION_OBJECTPOINT
+      if value.respond_to?(:to_str)
+        self.easy_setopt_string(handle, option, value.to_str)
+      else
+        self.easy_setopt_pointer(handle, option, value)
+      end
+    elsif option >= OPTION_LONG
+      self.easy_setopt_long(handle, option, value)
+    end
+  end
+
   attach_function :easy_strerror, :curl_easy_strerror, [:code], :string
 
   # Returns a char * that has to be freed using curl_free
@@ -933,6 +951,24 @@ module Curl
   attach_function :multi_setopt_string, :curl_multi_setopt, [:pointer, :multi_option, :string], :multi_code
   attach_function :multi_setopt_pointer, :curl_multi_setopt, [:pointer, :multi_option, :pointer], :multi_code
   attach_function :multi_setopt_curl_off_t, :curl_multi_setopt, [:pointer, :multi_option, :curl_off_t], :multi_code
+
+  def self.multi_setopt(handle, option, value)
+    option = MULTI_OPTION[option] if option.is_a?(Symbol)
+
+    if option >= OPTION_OFF_T
+      self.multi_setopt_curl_off_t(handle, option, value)
+    elsif option >= OPTION_FUNCTIONPOINT
+      self.multi_setopt_pointer(handle, option, value)
+    elsif option >= OPTION_OBJECTPOINT
+      if value.respond_to?(:to_str)
+        self.multi_setopt_string(handle, option, value.to_str)
+      else
+        self.multi_setopt_pointer(handle, option, value)
+      end
+    elsif option >= OPTION_LONG
+      self.multi_setopt_long(handle, option, value)
+    end
+  end
 
   attach_function :multi_socket_action, :curl_multi_socket_action, [:pointer, :curl_socket_t, :int, :pointer], :multi_code
   attach_function :multi_strerror, :curl_multi_strerror, [:multi_code], :string

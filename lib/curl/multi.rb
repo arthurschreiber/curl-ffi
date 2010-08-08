@@ -24,21 +24,7 @@ module Curl
     end
 
     def setopt(option, param)
-      option = option.is_a?(Symbol) ? Curl::MULTI_OPTION[option] : option
-
-      if option > Curl::OPTION_OFF_T
-        Curl.multi_setopt_curl_off_t(@pointer, option, param)
-      elsif option > Curl::OPTION_FUNCTIONPOINT
-        Curl.multi_setopt_pointer(@pointer, option, param)
-      elsif option > Curl::OPTION_OBJECTPOINT
-        if param.respond_to?(:to_str)
-          Curl.multi_setopt_string(@pointer, option, param.to_str)
-        else
-          Curl.multi_setopt_pointer(@pointer, option, param)
-        end
-      elsif option > Curl::OPTION_LONG
-        Curl.multi_setopt_long(@pointer, option, param)
-      end
+      Curl.multi_setopt(@pointer, option, param)
     end
 
     def info_read_all()

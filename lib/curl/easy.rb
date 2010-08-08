@@ -40,17 +40,7 @@ module Curl
     end
 
     def setopt(option, value)
-      if option > Curl::OPTION_OBJECTPOINT
-        if value.respond_to?(:to_str)
-          check_code(Curl.easy_setopt_string(@pointer, option, value.to_str))
-        else
-          check_code(Curl.easy_setopt_pointer(@pointer, option, value))
-        end
-      elsif option > Curl::OPTION_FUNCTIONPOINT
-        # Handle different function pointers
-      else
-        check_code(Curl.easy_setopt_long(@pointer, option, value))
-      end
+      check_code(Curl.easy_setopt(@pointer, option, value))
     end
 
     def getinfo(info)
