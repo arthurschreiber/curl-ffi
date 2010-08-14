@@ -1,0 +1,10 @@
+examples/evented_multi.rb
+examples/perform_multi.rb
+examples/select_multi.rb
+lib/curl.rb
+lib/curl/curl.rb
+lib/curl/easy.rb
+lib/curl/multi.rb
+spec/spec_helper.rb
+spec/curl/easy_spec.rb
+spec/curl/multi_spec.rb
