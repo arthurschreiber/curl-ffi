@@ -44,6 +44,8 @@ module Curl
     end
 
     def getinfo(info)
+      info = INFO[info] if info.is_a?(Symbol)
+
       if info > Curl::INFO_SLIST
         raise "Not implemented yet"
       elsif info > Curl::INFO_DOUBLE
