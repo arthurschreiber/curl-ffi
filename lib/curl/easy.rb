@@ -57,10 +57,6 @@ module Curl
       end
     end
 
-    def perform
-      check_code(Curl.easy_perform(@pointer))
-    end
-
     protected
       def check_code(result)
         if result != :OK
